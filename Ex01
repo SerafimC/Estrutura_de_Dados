@@ -1,0 +1,12 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+int main(){
+    int linhas, colunas; //nº de linhas
+    int *ilinhas = (int*) calloc(colunas, sizeof(int));
+
+
+
+
+
+}
