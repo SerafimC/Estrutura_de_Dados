@@ -4,7 +4,7 @@
 int uniao(int *v1,int n1, int *v2, int n2);
 
 int main(){
-    int i, n1 = 4, n2 = 7, *vet3;
+    int i, n1 = 30, n2 = 2, *vet3;
     int vet1[n1], vet2[n2];
 
     for(i=0; i<n1; i++){
@@ -26,7 +26,7 @@ int main(){
 }
 
 int uniao(int *v1,int n1, int *v2, int n2){
-    int i, *v3 = (int *) malloc(25*sizeof(int));
+    int i, *v3 = (int *) malloc((n1+n2)*sizeof(int));
 
     for(i = 0; i < (n1+n2); i++){
         if(i<n1){
