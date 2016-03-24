@@ -15,8 +15,8 @@ node* ini();
 node *init();
 node *insercao(node *tail, int dado);
 node *remocao(node *head);
-void insercaomeio(node *atual);
 node *buscalista(node *head, int dado);
+void insercaomeio(node *atual, int dado);
 void imprimir(node *head);
 int verificavazio(int top);
 int verificacheia(int top, int max);
@@ -86,7 +86,7 @@ int main () {
 
                         printf("\nDigite dado a ser inserido:");
                         scanf("%d", &dado);
-                        insercaomeio(atual);
+                        insercaomeio(atual, dado);
                 }
                 else{
                     printf("A fila está cheia\n");
@@ -130,7 +130,6 @@ void imprimir(node *head){
     printf("\n\n");
 }
 
-
 node *insercao(node *ultimo, int value) {
 
     node *next;
@@ -144,10 +143,11 @@ node *insercao(node *ultimo, int value) {
     return next;
 };
 
-void insercaomeio(node *atual){
+void insercaomeio(node *atual, int dado){
 
     node *next;
     next = (node*) malloc(1*sizeof(node));
+    next->num = dado;
 
     next->prox = atual->prox;
     atual->prox = next;
@@ -170,12 +170,10 @@ int verificavazio(int size) {
     }
     return 0;
 };
+
 int verificacheia(int top, int max) {
     if (top == max) {
         return 1;
     }
     return 0;
 };
-
-
-
