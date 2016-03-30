@@ -1,0 +1,74 @@
+#include <stdlib.h>
+#include <stdio.h>
+#define tam 10
+
+//------------Estruturas-------------
+typedef struct _node{
+     int info;
+     struct _node *next;
+     struct _node *prev;
+}node;
+
+typedef struct _listaconjunto{
+    int indice;
+    node *head;
+    node *tail;
+}listaconjunto;
+
+listaconjunto listaprincipal; // lista principal permite manipular os conjuntos, sendo acessíveis através dos indices
+
+//------------Funções Obrigatórias-------------
+node *adicionarconjunto(); // Adicionar novo conjunto de dados
+void exclusaoconjunto(node *anterior, int dado); // exclusão de conjunto após elemento selecionado
+void editarconjunto(node *anterior, int dado); // edição de elementos do conjunto
+void interseccao(node *conjunto1, node *conjunto2); //Intersecção de conuntos
+void uniao(node *conjunto1, node *conjunto2); //União de conuntos
+void diferenca(node *conjunto1, node *conjunto2); //Diferença de conuntos
+
+//------------Funções Auxiliares-------------
+node *insercaoconjunto(node *anterior, int dado); // Adicionar elemento ao conjunto após o elemento selecionado
+node *remocao(node *head);// Remocao de elemento em um conjunto
+node *buscar(node *head, int dado); //Buscar elemento dentro de um conjunto
+void imprimirconjunto(node *head); //Mostrar conjunto
+int verificavazio(int top); //Verificar se conjunto esta vazio
+
+//------------Classe Principal-------------
+int main(){
+    int menu, dado;
+    node *headgroup, *tailgroup, *atual, *novo;
+    /*
+    Ponteiros do tipo node para armazenarem:
+    Headgroup - Elemento no topo da lista no conjunto;
+    Tailgroup - Ultimo elemento que entrou na lista do conjunto;
+    Atual - Manipulação
+    */
+
+
+    printf("Trabalho_NP1\n\n1 - Adicionar Conjunto..\n2 - Excluir Conjunto..\n3 - Alterar conjunto..\n4 ");
+    printf("4 - Exibir Intersecção..\n5 - Exibir União..\n6 - Exibir Diferença\n0 - Sair\n");
+        scanf("%d", &menu);
+        //printf("\033[H\033[J"); //Limpar Tela no Linux
+        system("cls");// Limpar tela no Windows
+
+        switch (menu) {
+            case 1:
+                if(listaprincipalhead == NULL){
+                    listaprincipal.head = adicionarconjunto();
+                    listaprincipal.tail = listaprincipal.head;
+                    listaprincipal.indice = 0;//Indice das lista principal inicia em 0
+
+                    printf("\nPrimeiro conjunto criado!\n");
+                }
+                else{
+                    listaprincipal.head = adicionarconjunto();
+                    listaprincipal.indice = listaprincipal.indice  + 1;// incrementa em um o indice da lista principal
+
+                    printf("\nConjunto criado!\n");
+                }
+                break;
+            case 2:
+                printf("\nQual conjunto deseja excluir?\n");
+                scanf("%d", &dado);
+        }
+
+}
