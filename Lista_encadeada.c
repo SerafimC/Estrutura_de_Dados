@@ -3,177 +3,104 @@
 #define tam 10
 
 //------------Estruturas-------------
-struct Node{
-    int num;
-    struct Node *prox;
-};
-typedef struct Node node;
+typedef struct _node{
+     int info;
+     struct _node *next;
+     struct _node *prev;
+}node;
 
-node* ini();
+typedef struct _listaconjunto{
+    int indice;
+    node *next;
+    node *prev;
+}listaconjunto;
 
-//-------------Funções----------------
-node *init();
-node *insercao(node *tail, int dado);
-node *remocao(node *head);
-node *buscalista(node *head, int dado);
-void insercaomeio(node *atual, int dado);
-void imprimir(node *head);
-int verificavazio(int top);
-int verificacheia(int top, int max);
+listaconjunto listaprincipal; // lista principal permite manipular os conjuntos, sendo acessíveis através dos indices
 
-int main () {
-    int menu, dado, top = 0;
-    node *head, *ultimo, *atual, *novo;
+//------------Funções Obrigatórias-------------
+node *adicionarconjunto(); // Adicionar novo conjunto de dados
+void exclusaoconjunto(node *anterior, int dado); // exclusão de conjunto após elemento selecionado
+void editarconjunto(node *anterior, int dado); // edição de elementos do conjunto
+void interseccao(); //Intersecção de conuntos
+void uniao(); //União de conuntos
+void diferenca(); //Diferença de conuntos
 
-    do {
-        printf("Trabalho_Filas\n1 - Iniciar fila..\n2 - Insercao..\n3 - Remocao..\n4 - Verificar se esta cheia..\n5 - Verificar se esta vazia..\n6 - Inserir apos elemento selecionado\n7 - Imprimir lista;\n0 - Sair\n");
+//------------Funções Auxiliares-------------
+node *insercaoconjunto(listaprincipal *conjunto, node *anterior, int dado); // Adicionar elemento ao conjunto após o elemento selecionado
+node *remocao(listaprincipal *conjunto, node *head);// Remocao de elemento em um conjunto
+node *buscar(node *head, int dado); //Buscar elemento dentro de um conjunto
+void imprimirconjunto(node *head); //Mostrar conjunto
+int verificavazio(int top); //Verificar se conjunto esta vazio
+
+//------------Classe Principal-------------
+int main(){
+    int menu, dado;
+    listaconjunto *head, *tail, *conjuntoatual;
+    node *headgroup, *tailgroup, *atual, *novo;
+    /*
+    Ponteiros do tipo node para armazenarem:
+    Headgroup - Elemento no topo da lista no conjunto;
+    Tailgroup - Ultimo elemento que entrou na lista do conjunto;
+    Atual - Manipulação
+    */
+
+    printf("Trabalho_NP1\n\n1 - Adicionar Conjunto..\n2 - Excluir Conjunto..\n3 - Alterar conjunto..\n4 ");
+    printf("4 - Exibir Intersecção..\n5 - Exibir União..\n6 - Exibir Diferença\n0 - Sair\n");
         scanf("%d", &menu);
-        printf("\033[H\033[J");
+        //printf("\033[H\033[J"); //Limpar Tela no Linux
+        system("cls");// Limpar tela no Windows
 
         switch (menu) {
             case 1:
-                if (top == 0) {
-                       head = ini();
-                       ultimo = head;
-                       printf("Fila iniciada..\n\n");
-                   } else {
-                       printf("Fila ja iniciada!\n\n");
-                   }
+                if(head == NULL){
+                    listaprincipal.next = adicionarconjunto();
+                    listaprincipal.prev = NULL;
+                    listaprincipal.indice = 0;//Indice das lista principal inicia em 0
+
+                    printf("\nPrimeiro conjunto criado!\n");
+                }
+                else{
+                    listaprincipal.head = adicionarconjunto();
+                    listaprincipal.indice = listaprincipal.indice  + 1;// incrementa em um o indice da lista principal
+
+                    printf("\nConjunto criado!\n");
+                }
                 break;
             case 2:
-                if (!verificacheia(top, tam)){
-                        printf("Digite o valor a ser armazenado: ");
-                        scanf("%d", &dado);
-                        atual = insercao(ultimo, dado);
-                    if (atual != NULL) {
-                        ultimo = atual;
-                        if (verificavazio(top)) {
-                            head = ultimo;
-                        }
-                        top++;
-                    }
+                printf("\nQual conjunto deseja excluir?\n");
+                scanf("%d", &dado);
+
+                conjuntoatual = buscar(listaprincipal.head, dado); //Busca através dos índices qual o conjunto a ser excluido
+
+                if(conjuntoatual == NULL){ // Verifica se o conjunto foi encontrado
+                    printf("\nConjunto nao encontrado!\n");
                 }
-                else {
-                    printf("FILA CHEIA. Novos dados nao serao gravados\n");
+                else{ // Libera o espaço alocado para o conjunto selecionado
+                    exclusaoconjunto(conjuntoatual);
                 }
                 break;
             case 3:
-                if (!verificavazio(top)) {
-                    head = remocao(head);
-                    top--;
-                }
-                else {
-                    printf("FILA VAZIA\n");
-                }
-                break;
-            case 4:
-                if (verificacheia(top, tam))
-                    printf("Fila cheia\n");
-                else
-                    printf("Fila NAO esta cheia\n");
-            break;
-            case 5:
-                if (verificavazio(top))
-                    printf("Fila vazia\n");
-                else
-                    printf("Fila NAO esta vazia\n");
-                break;
-            case 6:
-                if (!verificacheia(top, tam)){
-                        printf("\nDigite dado da lista que sera elemento anterior:");
-                        scanf("%d", &dado);
-                        atual = buscalista(head, dado);
+                printf("\nQual conjunto deseja editar?\n");
+                scanf("%d", &dado);
 
-                        printf("\nDigite dado a ser inserido:");
-                        scanf("%d", &dado);
-                        insercaomeio(atual, dado);
+                conjuntoatual = buscar(listaprincipal.head, dado);//Busca através dos índices qual o conjunto a ser editado
+
+                if(conjuntoatual == NULL){ // Verifica se o conjunto foi encontrado
+                    printf("\nConjunto nao encontrado!\n");
                 }
-                else{
-                    printf("A fila está cheia\n");
+                else{ // Permite a edição do conjunto com as opções incluir ou excluir elementos
+                    printf("Edição do conjunto %d\n", dado);
+
+                    printf("\n1- Incluir\n2 - Excluir\n");
+                    scanf("%d", &dado);
+                    switch(dado){
+                        case 1:
+                            printf("Edição do conjunto %d\n", dado);
+                            insercaoconjunto(conjuntoatual)
+
+                    }
+
                 }
-                break;
-            case 7:
-                imprimir(head);
-                break;
-            case 0:
-                printf("Encerrando...");
-                break;
-            default:
-                printf("Opcao invalida!\n");
         }
 
-    }while(menu != 0);
-
-    return 0;
 }
-
-node *ini() {
-    return NULL;
-};
-
-node *buscalista(node *head, int dado){
-    node *busca;
-    for(busca = head; busca != NULL; busca = busca->prox){
-        if(busca->num == dado){
-            return busca;// retorna dado;
-        }
-    }
-    return NULL; //Se nao encontrar o dado, retorna nulo
-}
-
-void imprimir(node *head){
-    node *impr;
-    for(impr = head; impr != NULL; impr = impr->prox){
-            printf("%d ",impr->num);
-
-        }
-    printf("\n\n");
-}
-
-node *insercao(node *ultimo, int value) {
-
-    node *next;
-    next = (node *) malloc(1*sizeof(node));
-    if (next != NULL) {
-        next->num = value;
-        next->prox = NULL;
-        if (ultimo != NULL)
-            ultimo->prox = next;
-    }
-    return next;
-};
-
-void insercaomeio(node *atual, int dado){
-
-    node *next;
-    next = (node*) malloc(1*sizeof(node));
-    next->num = dado;
-
-    next->prox = atual->prox;
-    atual->prox = next;
-
-    return 0;
-}
-
-node *remocao(node *head) {
-
-    node *new_head;
-    new_head = head->prox;
-    free(head);
-    return new_head;
-};
-
-int verificavazio(int size) {
-
-    if (size == 0) {
-        return 1;
-    }
-    return 0;
-};
-
-int verificacheia(int top, int max) {
-    if (top == max) {
-        return 1;
-    }
-    return 0;
-};
