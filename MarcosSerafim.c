@@ -389,6 +389,8 @@ int remocacoconjunto(listaconjunto *conjuntoatual, int dado){// Remocao de eleme
 
 }
 
+//INTERSECCAO CONJUNTO - Mostra os elementos em comum a todos os conjuntos
+//Retornos : 1 - Interseccao realizada / 0 - Existe apenas um conjunto numérico criado
 int interseccao(listaconjunto *head){
 
    if(head->prox == NULL){
@@ -425,6 +427,8 @@ int interseccao(listaconjunto *head){
     }
 }
 
+//UNIÃO CONJUNTO - Mostra todos os elementos de todos os conjuntos unidos em um só conjunto
+//Retornos : 1 - Interseccao realizada / 0 - Existe apenas um conjunto numérico criado
 int uniao(listaconjunto *head){
 
     if(head->prox == NULL){
@@ -452,6 +456,8 @@ int uniao(listaconjunto *head){
     }
 }
 
+//DIFERENÇA ENTRE CONJUNTOs - Mostra todos elementos que não se repetem em nenhum conjunto
+//Retornos : 1 - Interseccao realizada / 0 - Existe apenas um conjunto numérico criado
 int diferenca(listaconjunto *head){
 
     if(head->prox == NULL){
