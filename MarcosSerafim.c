@@ -19,9 +19,9 @@ typedef struct _listaconjunto{
 listaconjunto *adicionarconjunto(listaconjunto *head); // Função recebe como parametro a head para verificar se a lista não está vazia. Retorna o endereço de memória estrutura que contem do indice do conjunto
 listaconjunto *exclusaoconjunto(listaconjunto *conjuntoatual); // exclusão de conjunto após elemento selecionado
 void editarconjunto(node *anterior, int dado); // edição de elementos do conjunto
-void interseccao(listaconjunto *head); //Intersecção de conjuntos
-void uniao(listaconjunto *head); //União de conjuntos
-void diferenca(listaconjunto *head); //Diferença de conjuntos
+int interseccao(listaconjunto *head); //Intersecção de conjuntos
+int uniao(listaconjunto *head); //União de conjuntos
+int diferenca(listaconjunto *head); //Diferença de conjuntos
 
 //------------Funções Auxiliares-------------
 listaconjunto *buscarconjunto(listaconjunto *head, int dado); //Buscar conjunto dentro de um conjunto
@@ -117,9 +117,11 @@ int main(){
                 break;
 
             case 3:// Alterar conjunto
-                for(i = 0; i < tail->indice+1; i++){ // Loop para imprimir todos os conjuntos existentes
+                for(i = 0; i <= tail->indice; i++){ // Loop para imprimir todos os conjuntos existentes
                     conjuntoatual = buscarconjunto(head, i);// Torna o conjuntoatual o de indice i;
-                    imprimirconjunto(conjuntoatual);//imprime conjuntoatual;
+                    if(conjuntoatual != NULL){
+                      imprimirconjunto(conjuntoatual);//imprime conjuntoatual;
+                    }
                 }
                 printf("\nQual conjunto deseja editar?\n");
                 scanf("%d", &dado);
@@ -169,13 +171,31 @@ int main(){
                 }
                 break;
             case 4:
-                interseccao(head);
+                if(head == NULL){
+                    printf("Não existem conjuntos criados!\n");
+                    break;
+                }
+                else if(interseccao(head) == 0){
+                    printf("Existe apenas um conjunto criado!\n");
+                }
                 break;
             case 5:
-                uniao(head);
+                if(head == NULL){
+                    printf("Não existem conjuntos criados!\n");
+                    break;
+                }
+                else if(uniao(head) == 0){
+                    printf("Existe apenas um conjunto criado!\n");
+                }
                 break;
             case 6:
-                diferenca(head);
+                if(head == NULL){
+                    printf("Não existem conjuntos criados!\n");
+                    break;
+                }
+                else if(diferenca(head) == 0){
+                    printf("Existe apenas um conjunto criado!\n");
+                }
                 break;
 
         }
@@ -202,7 +222,7 @@ node *buscarelemento(listaconjunto *conjuntoatual, int dado){
 }
 
 //BUSCAR CONJUNTO - Recebe a Head da classe principal e o indice do conjunto que deseja-se buscar. Retorna o endereço do conjunto;
-listaconjunto *buscarconjunto(listaconjunto *head, int dado){ //Buscar elemento dentro de um conjunto
+listaconjunto *buscarconjunto(listaconjunto *head, int dado){
     listaconjunto *busca;
 
     if(head == NULL){//Evita cair no loop e perder desempenho
@@ -243,7 +263,7 @@ listaconjunto *adicionarconjunto(listaconjunto *head){
 }
 
 //EXCLUSÃO CONJUNTO - Recebe endereço do conjunto que deseja-se excluir.
-listaconjunto *exclusaoconjunto(listaconjunto *conjuntoatual){ // exclusão de conjunto após elemento selecionado
+listaconjunto *exclusaoconjunto(listaconjunto *conjuntoatual){
     listaconjunto *retorno;// Ponteiro auxiliar
 
     if(conjuntoatual->prox == NULL && conjuntoatual->ante == NULL){//Exclusão conjunto único - Apenas um conjunto existente
@@ -369,66 +389,102 @@ int remocacoconjunto(listaconjunto *conjuntoatual, int dado){// Remocao de eleme
 
 }
 
-void interseccao(listaconjunto *head){
-   /* listaconjunto *intersec = adicionarconjunto(head); //Cria o conjunto de interseccao
+int interseccao(listaconjunto *head){
 
-    node *buscaelemento, *buscaconjunto;
-    listaconjunto *busca;
+   if(head->prox == NULL){
+        return 0;
+    }
+    else{
+        listaconjunto *inter = adicionarconjunto(head); //Cria o conjunto de diferença
+        node *buscaelemento, *elemento;
+        listaconjunto *busca;
 
-    for(busca = head; busca != NULL; busca = busca->prox){
-        for(buscaconjunto = head->conjunto; buscaconjunto != NULL; buscaconjunto = buscaconjunto->next){
-         //   if(busca->prox == buscaconjunto->info){
-                insercaoconjunto(intersec, buscaconjunto->info);
-            }
-        }*/
+        for(buscaelemento = head->conjunto; buscaelemento != NULL; buscaelemento = buscaelemento->next){
+            insercaoconjunto(inter, buscaelemento->info);
+        }
 
-
-    //imprimirconjunto(intersec);
-    //exclusaoconjunto(intersec);
-}
-
-void uniao(listaconjunto *head){
-    listaconjunto *uni = adicionarconjunto(head); //Cria o conjunto de união
-
-    listaconjunto *busca;
-    node *buscaelemento;
-
-    for(busca = head; busca != NULL; busca = busca->prox){
-        for(buscaelemento = busca->conjunto; buscaelemento != NULL; buscaelemento = buscaelemento->next){
-             if(buscarelemento(uni, buscaelemento->info) == NULL){
-                insercaoconjunto(uni, buscaelemento->info);
+        for(busca = head->prox; busca->indice != inter->indice; busca = busca->prox){
+            if(busca->conjunto != NULL){
+                for(buscaelemento = inter->conjunto; buscaelemento != NULL; buscaelemento = buscaelemento->next){
+                    elemento = buscarelemento(busca, buscaelemento->info);
+                    if(elemento == NULL){
+                        remocacoconjunto(inter, buscaelemento->info);
+                    }
+                    else{
+                        insercaoconjunto(inter, buscaelemento->info);
+                    }
+                }
             }
         }
-    }
 
-    imprimirconjunto(uni);
-    exclusaoconjunto(uni);
+        printf("Intersecção dos conjuntos:\n");
+        imprimirconjunto(inter);
+        exclusaoconjunto(inter);
+
+        return 1;
+    }
 }
 
-void diferenca(listaconjunto *head){
-    listaconjunto *dif = adicionarconjunto(head); //Cria o conjunto de diferença
+int uniao(listaconjunto *head){
 
-    node *buscaelemento, *elemento;
-    listaconjunto *busca;
-
-    for(buscaelemento = head->conjunto; buscaelemento != NULL; buscaelemento = buscaelemento->next){
-        insercaoconjunto(dif, buscaelemento->info);
+    if(head->prox == NULL){
+        return 0;
     }
+    else{
+        listaconjunto *uni = adicionarconjunto(head); //Cria o conjunto de união
 
-    for(busca = head->prox; busca != NULL; busca = busca->prox){
-        for(buscaelemento = busca->conjunto; buscaelemento != NULL; buscaelemento = buscaelemento->next){
-            elemento = buscarelemento(dif, buscaelemento->info);
-            printf("E: %p\n", elemento);
-            if(elemento != NULL){
-                remocacoconjunto(dif, buscaelemento->info);
-            }
-            else{
-                insercaoconjunto(dif, buscaelemento->info);
+        listaconjunto *busca;
+        node *buscaelemento;
+
+        for(busca = head; busca != NULL; busca = busca->prox){
+            for(buscaelemento = busca->conjunto; buscaelemento != NULL; buscaelemento = buscaelemento->next){
+                 if(buscarelemento(uni, buscaelemento->info) == NULL){
+                    insercaoconjunto(uni, buscaelemento->info);
+                }
             }
         }
-    }
-    imprimirconjunto(dif);
 
-    exclusaoconjunto(dif);
+        printf("União dos conjuntos:\n");
+        imprimirconjunto(uni);
+        exclusaoconjunto(uni);
+
+        return 1;
+    }
 }
 
+int diferenca(listaconjunto *head){
+
+    if(head->prox == NULL){
+        return 0;
+    }
+    else{
+        listaconjunto *dif = adicionarconjunto(head); //Cria o conjunto de diferença
+        node *buscaelemento, *elemento;
+        listaconjunto *busca;
+
+        for(buscaelemento = head->conjunto; buscaelemento != NULL; buscaelemento = buscaelemento->next){
+            insercaoconjunto(dif, buscaelemento->info);
+        }
+
+
+        for(busca = head->prox; busca->indice != dif->indice; busca = busca->prox){
+            if(busca->conjunto != NULL){
+                for(buscaelemento = busca->conjunto; buscaelemento != NULL; buscaelemento = buscaelemento->next){
+                    elemento = buscarelemento(dif, buscaelemento->info);
+                    if(elemento != NULL){
+                        remocacoconjunto(dif, buscaelemento->info);
+                    }
+                    else{
+                        insercaoconjunto(dif, buscaelemento->info);
+                    }
+                }
+            }
+        }
+
+        printf("Diferença entre os conjuntos:\n");
+        imprimirconjunto(dif);
+        exclusaoconjunto(dif);
+
+        return 1;
+    }
+}
