@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SIZE_VECTOR 40
+#define SIZE_VECTOR 4
 
 //------------------------Estruturas--------------------------
 typedef struct _contato{
@@ -18,15 +18,19 @@ typedef struct list{
 
 //-------------------------Funções----------------------------
 TpContato *createVector();
+TpContato *copyVector(TpContato *vet);
 TpList *createList(int n);
 TpList *addContact(TpList *head);// Retornará ponteiro para a HEAD;
+TpList *copyList(TpList *head);
 void printVector(TpContato *vect);
-void printListe(TpList *head);
+void printList(TpList *head);
+void randomDataList(TpList *neo);
+void randomDataVector(TpContato *vect);
 
 //-------------------------Função Principal-------------------
 int main(){
     int menu, dado, i;
-    TpContato *vect = NULL;
+    TpContato *vect = NULL, *control;
     TpList *head = NULL, *tail, *manipulation;
     /*
     Ponteiro do tipo listaconjunto para armazenarem:
@@ -49,6 +53,7 @@ int main(){
                     scanf("%d", &dado);
                     head = createList(dado);
                     printf("List created sucessfully!\n");
+                    printList(head);
                 }
                 else{
                     printf("List already has been created!\n");
@@ -65,23 +70,17 @@ int main(){
                 }
 
                 break;
+            case 3:
+                control = copyVector(vect);
         }
     }while(menu != 0);
 }
 
 TpContato *createVector(){
     int i, id;
-    TpContato vet[SIZE_VECTOR], *p;
-    p = vet;
+    TpContato vet[SIZE_VECTOR];
 
-    for(i = 0; i < SIZE_VECTOR; i++){
-        id = rand () % 999 + 1;
-        printf("%d\n", id);
-        snprintf(vet[i].nome, sizeof vet[i].nome, "Fulano %d", id);
-
-        id = rand () % 99999999;
-        snprintf(vet[i].fone, sizeof vet[i].fone, "Fulano %d", id);
-    }
+    randomDataVector(vet);
 
     return p;
 }
@@ -106,11 +105,7 @@ TpList *addContact(TpList *head){
         neo->next = NULL;
         neo->prev = NULL;
 
-        id = rand () % 999 + 1;
-        snprintf(neo->contato.nome, sizeof neo->contato.nome, "Fulano %03d", id);
-
-        id = rand () % 99999999;
-        snprintf(neo->contato.fone, sizeof neo->contato.fone, "Fulano %d", id);
+        randomDataList(neo);
 
         neo->indice = 0;
 
@@ -121,6 +116,8 @@ TpList *addContact(TpList *head){
         search->next = neo;
         neo->prev = search;
         neo->next = NULL;
+
+        randomDataList(neo);
 
         neo->indice = search->indice + 1;
 
@@ -138,4 +135,53 @@ void printVector(TpContato *vect){
     printf("--------------------\n");
     }
 }
+
+void printList(TpList *head){
+    TpList *print;
+
+    for(print = head; print != NULL; print = print->next){
+        printf("--------------------\n");
+        printf("Nome: %s\n", print->contato.nome);
+        printf("Fone: %s\n", print->contato.fone);
+        printf("--------------------\n");
+    }
+}
+
+void randomDataList(TpList *neo){
+    int id;
+
+    id = rand () % 999 + 1;
+    snprintf(neo->contato.nome, sizeof neo->contato.nome, "Fulano %03d", id);
+
+    id = rand () % 99999999 + 1;
+    snprintf(neo->contato.fone, sizeof neo->contato.fone, "%d", id);
+}
+
+void randomDataVector(TpContato *vect){
+    int i, id;
+
+    for(i = 0; i < SIZE_VECTOR; i++){
+        id = rand () % 999 + 1;
+        snprintf(vect[i].nome, sizeof vect[i].nome, "Fulano %d", (char) id);
+
+        id = rand () % 99999999 + 1;
+        snprintf(vect[i].fone, sizeof vect[i].fone, "%d", id);
+    }
+}
+
+TpContato *copyVector(TpContato *vet){
+    int i;
+    TpContato vectcopy[SIZE_VECTOR];
+
+    for(i = 0; i < SIZE_VECTOR; i++){
+        vectcopy[i] = vect[i];
+    }
+
+    return vectcopy;
+}
+
+
+
+
+
 
