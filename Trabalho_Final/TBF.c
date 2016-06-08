@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SIZE_VECTOR 4
+#define SIZE_VECTOR 15
 
 //------------------------Estruturas--------------------------
 typedef struct _contato{
@@ -19,6 +19,7 @@ typedef struct list{
 //-------------------------Funções----------------------------
 TpContato *createVector();
 TpContato *copyVector(TpContato *vet);
+void cocktailSort(TpContato *vet);
 TpList *createList(int n);
 TpList *addContact(TpList *head);// Retornará ponteiro para a HEAD;
 TpList *copyList(TpList *head);
@@ -43,6 +44,8 @@ int main(){
         printf("\nTrabalho_NP2\n\n1 - Criar Lista..\n2 - Criar Vetor..\n3 - Algoritmo a ser estudado..\n");
         printf("4 - Método logarítmico..\n0 - Sair\n");
         scanf("%d", &menu);
+        __fpurge(stdin);
+        getchar();
         printf("\033[H\033[J"); //Limpar Tela no Linux
         //system("cls");// Limpar tela no Windows
 
@@ -72,15 +75,19 @@ int main(){
                 break;
             case 3:
                 control = copyVector(vect);
+                cocktailSort(control);
+                printVector(control);
+                break;
         }
     }while(menu != 0);
 }
 
 TpContato *createVector(){
     int i, id;
-    TpContato vet[SIZE_VECTOR];
+    //TpContato *p = calloc(SIZE_VECTOR, sizeof(TpContato));
+    TpContato *p = malloc(SIZE_VECTOR * sizeof(TpContato));
 
-    randomDataVector(vet);
+    randomDataVector(p);
 
     return p;
 }
@@ -129,10 +136,10 @@ void printVector(TpContato *vect){
     int i;
 
     for(i = 0; i < SIZE_VECTOR; i++){
-    printf("--------------------\n");
-    printf("Nome: %s\n", vect[i].nome);
-    printf("Fone: %s\n", vect[i].fone);
-    printf("--------------------\n");
+        printf("--------------------\n");
+        printf("Nome: %s\n", vect[i].nome);
+        printf("Fone: %s\n", vect[i].fone);
+        printf("--------------------\n");
     }
 }
 
@@ -150,35 +157,96 @@ void printList(TpList *head){
 void randomDataList(TpList *neo){
     int id;
 
-    id = rand () % 999 + 1;
+    id = (rand () % 999 + 1) + 48;
     snprintf(neo->contato.nome, sizeof neo->contato.nome, "Fulano %03d", id);
 
-    id = rand () % 99999999 + 1;
+    id = (rand () % 99999999 + 1) + 48;
     snprintf(neo->contato.fone, sizeof neo->contato.fone, "%d", id);
 }
 
 void randomDataVector(TpContato *vect){
-    int i, id;
+    int i = 0, id, j;
+    char code[4], fone[9];
 
-    for(i = 0; i < SIZE_VECTOR; i++){
-        id = rand () % 999 + 1;
-        snprintf(vect[i].nome, sizeof vect[i].nome, "Fulano %d", (char) id);
+    /*for(i = 0; i < SIZE_VECTOR; i++){
+        for(j = 0; j < 3; j++){
+            code[j] = (rand () % 10) + 48;
+        }
 
-        id = rand () % 99999999 + 1;
-        snprintf(vect[i].fone, sizeof vect[i].fone, "%d", id);
+        code[3] = '\0';
+        strcpy(vect[i].nome, "Fulano ");
+        strcat(vect[i].nome, code);
+
+
+        for(j = 0; j < 8 ; j++){
+            fone[j] = (rand () % 10) + 48;
+        }
+        fone[8] = '\0';
+        strcpy(vect[i].fone, fone);
+
     }
+    */
 }
 
 TpContato *copyVector(TpContato *vet){
     int i;
-    TpContato vectcopy[SIZE_VECTOR];
+    //TpContato *vetcpy = calloc(SIZE_VECTOR, sizeof(TpContato));
+    TpContato *vetcpy = malloc(SIZE_VECTOR * sizeof(TpContato));
 
     for(i = 0; i < SIZE_VECTOR; i++){
-        vectcopy[i] = vect[i];
+        strcpy(vetcpy[i].nome, vet[i].nome);
+        strcpy(vetcpy[i].fone, vet[i].fone);
     }
 
-    return vectcopy;
+    return vetcpy;
 }
+
+void cocktailSort(TpContato *vet){
+    TpContato aux;
+    int length, bottom, top, swapped, i;
+    length = SIZE_VECTOR;
+    bottom = 0;
+    top = length - 1;
+    swapped = 0;
+
+    while(swapped == 0 && bottom < top){//Se não houver troca de posições ou o ponteiro que
+                                    //sobe ultrapassar o que desce, o vetor esta ordenado
+        swapped = 1;
+        //Ordenação direita para esquerda;
+        for(i = bottom; i < top; i = i + 1)
+        {
+            if(strcmp(vet[i].nome, vet[i + 1].nome) == 1){  //indo pra direita: se o proximo é maior que o atual, troca as posições
+                strcpy(aux.nome, vet[i].nome);
+                strcpy(aux.fone, vet[i].fone);
+
+                strcpy(vet[i].nome, vet[i + 1].nome);
+                strcpy(vet[i].fone, vet[i + 1].fone);
+
+                strcpy(vet[i + 1].nome, aux.nome);
+                strcpy(vet[i + 1].fone, aux.fone);
+                swapped = 0;
+            }
+        }
+
+        top = top - 1;// TOP decrementa um pois elemento maior já está à direita.
+        //Ordenação esquerda para direita
+        for(i = top; i > bottom; i = i - 1){
+            if(strcmp(vet[i].nome, vet[i - 1].nome) == -1){
+                strcpy(aux.nome, vet[i].nome);
+                strcpy(aux.fone, vet[i].fone);
+
+                strcpy(vet[i].nome, vet[i - 1].nome);
+                strcpy(vet[i].fone, vet[i - 1].fone);
+
+                strcpy(vet[i - 1].nome, aux.nome);
+                strcpy(vet[i - 1].fone, aux.fone);
+                swapped = 0;
+            }
+        }
+
+        bottom = bottom + 1;//BOTTOM incrementa em um pois menor elemento já está à esquerda
+    }//fecha while
+ }// fim da funçao
 
 
 
