@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SIZE_VECTOR 40
+#include <time.h>
+#define SIZE_VECTOR 15
 
 //------------------------Estruturas--------------------------
 typedef struct _contato{
@@ -21,7 +22,7 @@ TpContato *createVector();
 TpContato *copyVector(TpContato *vet);
 
 TpList *createList(int n);
-TpList *addContact(TpList *head);// Retornará ponteiro para a HEAD;
+TpList *addContact(TpList *head);
 TpList *addContactcpy(TpList *head, TpList *headCpy);
 TpList *copyList(TpList *head);
 
@@ -34,17 +35,15 @@ void randomDataVector(TpContato *vect);
 void cocktailSortVector(TpContato *vet);
 void cocktailSortList(TpList *head);
 
+void quickSortVector(TpContato *vet, int left, int right);
+void quickSortList(TpList *head, int left, int right);
+
 //-------------------------Função Principal-------------------
 int main(){
-    int menu, dado, i;
-    TpContato *vect = NULL, *control;
-    TpList *head = NULL, *tail, *manipulation;
-    /*
-    Ponteiro do tipo listaconjunto para armazenarem:
-    head - Primeiro conjunto criado. Indica conjunto inicio da fila;
-    tail - Ultimo conjunto criado. Indica conjunto no final da fila;
-    conjuntoatual - Manipulação;
-    */
+    int menu, dado, i;// Variaveis do MENU PRINCIPAL
+    clock_t c0, c1; //Variaveis para calculo de tempo de execução
+    TpContato *vect = NULL, *control;// Ponteiros para acesso e manipulação de vetores
+    TpList *head = NULL, *tail, *manipulation;// Ponteiros para acesso e manipulação de listas
 
     do{
         printf("\nTrabalho_NP2\n\n1 - Criar Lista..\n2 - Criar Vetor..\n3 - Algoritmo a ser estudado..\n");
@@ -56,7 +55,7 @@ int main(){
 
         switch (menu) {
             case 1:
-                if(head == NULL){
+                if(head == NULL){// Criar lista
                     printf("How many contacts do you want to create?\n");
                     scanf("%d", &dado);
                     head = createList(dado);
@@ -67,7 +66,7 @@ int main(){
                     printf("List already has been created!\n");
                 }
                 break;
-            case 2:
+            case 2:// Criar Vetor
                 if(vect == NULL){
                     vect = createVector();
                     printf("Vector created sucessfully!\n\n");
@@ -78,12 +77,15 @@ int main(){
                 }
 
                 break;
-            case 3:
+            case 3:// Ordenar vetor e lista CocktailSort
                 if(vect != NULL){
                     control = copyVector(vect);
                     printf("Cocktail Sort Vector:\n");
+                    c0 = clock(); // Inicio tempo de execução
                     cocktailSortVector(control);
+                    c1 = clock();//Fim tempo de execução
                     printVector(control);
+                    printf("\nTempo de execução: %lf\n\n", (double) (c1 - c0)/CLOCKS_PER_SEC);
                 }
                 else{
                     printf("Vector has not been created!\n");
@@ -92,13 +94,44 @@ int main(){
                 if(head != NULL){
                     manipulation = copyList(head);
                     printf("Cocktail Sort List:\n");
+                    c0 = clock(); // Inicio tempo de execução
                     cocktailSortList(manipulation);
+                    c1 = clock();//Fim tempo de execução
                     printList(manipulation);
+                    printf("\nTempo de execução: %lf\n\n", (double) (c1 - c0)/CLOCKS_PER_SEC);
                 }
                 else{
                     printf("List has not been created!\n");
                 }
                 break;
+            case 4:
+                if(vect != NULL){
+                    control = copyVector(vect);
+                    printf("Quick Sort Vector:\n");
+                    c0 = clock(); // Inicio tempo de execução
+                    quickSortVector(control, 0, SIZE_VECTOR - 1);
+                    c1 = clock();//Fim tempo de execução
+                    printVector(control);
+                    printf("\nTempo de execução: %lf\n\n", (double) (c1 - c0)/CLOCKS_PER_SEC);
+                }
+                else{
+                    printf("Vector has not been created!\n");
+                }
+                if(head != NULL){
+                    manipulation = copyList(head);
+                    printf("Quick Sort List:\n");
+                    c0 = clock(); // Inicio tempo de execução
+                    quickSortList(manipulation, head->indice, );
+                    c1 = clock();//Fim tempo de execução
+                    printList(manipulation);
+                    printf("\nTempo de execução: %lf\n\n", (double) (c1 - c0)/CLOCKS_PER_SEC);
+                }
+                else{
+                    printf("List has not been created!\n");
+                }
+                break;
+                break;
+
         }
     }while(menu != 0);
     //free(vect);
@@ -376,10 +409,61 @@ void cocktailSortList(TpList *head){
     }//fecha while
  }// fim da funçao
 
+void quickSortVector(TpContato *vet, int left, int right){
+    int pivo = left, i, j;//4
+    TpContato aux;
 
+    for(i = left + 1; i <= right; i++){
+        j = i;//1
 
+        if(strcmp(vet[j].nome, vet[pivo].nome) < 0){
+            strcpy(aux.nome, vet[j].nome);
+            strcpy(aux.fone, vet[j].fone);
 
+            while(j > pivo){
+                strcpy(vet[j].nome, vet[j - 1].nome);
+                strcpy(vet[j].fone, vet[j - 1].fone);
+                j--;
+            }
+            strcpy(vet[j].nome, aux.nome);
+            strcpy(vet[j].fone, aux.fone);
+            pivo++;
+        }
+    }
+    if(pivo - 1 > left){
+        quickSortVector(vet, left, pivo - 1);
+    }
+    if(pivo + 1 < right){
+        quickSortVector(vet, pivo + 1, right);
+    }
+ }
 
+void quickSortList(TpList *head, int left, int right){
+    int pivo = left, i, j;//4
+    TpContato aux;
 
+    for(i = left + 1; i <= right; i++){
+        j = i;//1
 
+        if(strcmp(vet[j].nome, vet[pivo].nome) < 0){
+            strcpy(aux.nome, vet[j].nome);
+            strcpy(aux.fone, vet[j].fone);
+
+            while(j > pivo){
+                strcpy(vet[j].nome, vet[j - 1].nome);
+                strcpy(vet[j].fone, vet[j - 1].fone);
+                j--;
+            }
+            strcpy(vet[j].nome, aux.nome);
+            strcpy(vet[j].fone, aux.fone);
+            pivo++;
+        }
+    }
+    if(pivo - 1 > left){
+        quickSortVector(vet, left, pivo - 1);
+    }
+    if(pivo + 1 < right){
+        quickSortVector(vet, pivo + 1, right);
+    }
+}
 
