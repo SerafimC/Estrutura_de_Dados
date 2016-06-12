@@ -25,6 +25,7 @@ TpList *createList(int n);
 TpList *addContact(TpList *head);
 TpList *addContactcpy(TpList *head, TpList *headCpy);
 TpList *copyList(TpList *head);
+TpList *findLastPs(TpList *head);
 
 void printVector(TpContato *vect);
 void printList(TpList *head);
@@ -36,7 +37,7 @@ void cocktailSortVector(TpContato *vet);
 void cocktailSortList(TpList *head);
 
 void quickSortVector(TpContato *vet, int left, int right);
-void quickSortList(TpList *head, int left, int right);
+void quickSortList(TpList *head, TpList *left, TpList *right);
 
 //-------------------------Função Principal-------------------
 int main(){
@@ -119,9 +120,10 @@ int main(){
                 }
                 if(head != NULL){
                     manipulation = copyList(head);
+                    tail = findLastPs(manipulation);
                     printf("Quick Sort List:\n");
                     c0 = clock(); // Inicio tempo de execução
-                    quickSortList(manipulation, head->indice, );
+                    quickSortList(manipulation, manipulation, tail);
                     c1 = clock();//Fim tempo de execução
                     printList(manipulation);
                     printf("\nTempo de execução: %lf\n\n", (double) (c1 - c0)/CLOCKS_PER_SEC);
@@ -189,6 +191,14 @@ TpList *addContact(TpList *head){
 
         return head;
     }
+}
+
+TpList *findLastPs(TpList *head){
+    TpList *search;
+
+    for(search = head; search->next != NULL; search = search->next);
+
+    return search;
 }
 
 void printVector(TpContato *vect){
@@ -438,32 +448,54 @@ void quickSortVector(TpContato *vet, int left, int right){
     }
  }
 
-void quickSortList(TpList *head, int left, int right){
-    int pivo = left, i, j;//4
+void quickSortList(TpList *head, TpList *left, TpList *right){
+    TpList *search, *j, *pivo = left;;
     TpContato aux;
 
-    for(i = left + 1; i <= right; i++){
-        j = i;//1
+    for(search = left->next ; search != right; search = search->next){
+        j = search;
 
-        if(strcmp(vet[j].nome, vet[pivo].nome) < 0){
-            strcpy(aux.nome, vet[j].nome);
-            strcpy(aux.fone, vet[j].fone);
+        if(strcmp(j->contato.nome, pivo->contato.nome) < 0){
+            strcpy(aux.nome, j->contato.nome);
+            strcpy(aux.fone, j->contato.fone);
 
-            while(j > pivo){
-                strcpy(vet[j].nome, vet[j - 1].nome);
-                strcpy(vet[j].fone, vet[j - 1].fone);
-                j--;
+            while(j->indice > pivo->indice){
+                strcpy(j->contato.nome, j->prev->contato.nome);
+                strcpy(j->contato.fone, j->prev->contato.fone);
+                j = j->prev;
             }
-            strcpy(vet[j].nome, aux.nome);
-            strcpy(vet[j].fone, aux.fone);
-            pivo++;
+            strcpy(j->contato.nome, aux.nome);
+            strcpy(j->contato.fone, aux.fone);
+            pivo = pivo->next;
         }
     }
-    if(pivo - 1 > left){
-        quickSortVector(vet, left, pivo - 1);
+    if(search == right){
+        j = search;
+
+        if(strcmp(j->contato.nome, pivo->contato.nome) < 0){
+            strcpy(aux.nome, j->contato.nome);
+            strcpy(aux.fone, j->contato.fone);
+
+            while(j->indice > pivo->indice){
+                strcpy(j->contato.nome, j->prev->contato.nome);
+                strcpy(j->contato.fone, j->prev->contato.fone);
+                j = j->prev;
+            }
+            strcpy(j->contato.nome, aux.nome);
+            strcpy(j->contato.fone, aux.fone);
+            pivo = pivo->next;
+        }
     }
-    if(pivo + 1 < right){
-        quickSortVector(vet, pivo + 1, right);
+    if(pivo->prev != NULL){
+        if(pivo->prev->indice > left->indice){
+            quickSortList(head, left, pivo->prev);
+        }
+    }
+    if(pivo->next != NULL){
+        if(pivo->next->indice < right->indice){
+            quickSortList(head, pivo->next, right);
+        }
     }
 }
+
 
