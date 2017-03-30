@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1461728720 source:/home/igor/Documentos/UFFS/Estruturas_de_dados/TNP1.c
+	<stdlib.h>
+	<stdio.h>
+

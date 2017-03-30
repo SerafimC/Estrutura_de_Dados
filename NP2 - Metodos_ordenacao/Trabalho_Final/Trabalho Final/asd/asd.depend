@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1465741279 source:/home/marcos/Documents/UFFS/Estruturas_de_dados/NP2 - Metodos_ordenacao/Trabalho_Final/Trabalho Final/asd/asd.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+

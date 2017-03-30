@@ -1,0 +1,138 @@
+O programa deve ser implementado em linguagem C, padrão ANSI.
+Todos devem submeter um arquivo nomeado . Caso alguém implementar com bibliotecas próprias, então deve submeter um arquivo compactado em formato .zip, contendo todas as bibliotecas necessárias, sob o nome .
+
+Participantes: 3
+
+Questão:
+
+Implemente UM programa que permita o uso de dois métodos de ordenação (Algoritmo a ser estudado e logarítmica)sorteados em sala.
+
+O algoritmo a ser estudado deve ser feito um pequeno relatório, contendo uma breve explicação, um exemplo prático e o pseudocódigo.
+
+
+Segue a lista abaixo:
+
+//Algoritmo a ser estudado
+
+1. Comb sort
+2. Shell sort
+3. Radix sort
+4. Gnome sort
+5. Cocktail sort
+
+//Complexidade logarítmica
+1. Merge Sort
+2. Quick sort
+
+Cada método de ordenação deve ser implementado como uma função. Todos os métodos devem, obrigatoriamente, serem implementados usando listas duplamente ligadas e vetores.
+
+O programa deve exibir um menu principal com as seguintes opções:
+
+1) Criar Lista
+2) Criar Vetor
+3) Algoritmo a ser estudado
+4) Método logarítmico
+5) Sair
+
+Ao executar o programa, o usuário deve informar o tamanho da lista a ser criada (opção 1). 
+Já o tamanho do vetor deve ser fixado em 40 posições (opção 2).
+Após esta entrada, o programa deve criar uma lista com o tamanho indicado, populada com dados que seguem a seguinte estrutura.
+
+typedef struct _contato{
+char nome[40];
+char fone[30];
+}TpContato;
+
+Obs.: A inserção dos contatos deve ser feita de maneira automática, ou seja, dado o tamanho da lista, o programa deve criar contatos com nomes aleatórios.
+
+Ex. de nomes: Fulano 123, Fulano 924, Fulano 837. Neste caso a constante Fulano será concatenada com um número gerado aleatoriamente (função rand()). O número do telefone também pode ser gerado aleatoriamente.
+
+Após populada, a lista deve ser impressa na tela, um contato abaixo do outro, no seguinte formato:
+
+Vetor:
+
+--------------------
+Nome: Fulano 123
+Fone: 92384739
+--------------------
+Nome: Fulano 924
+Fone: 92384222
+--------------------
+Nome: Fulano 837
+Fone: 33384222
+--------------------
+
+Lista:
+
+--------------------
+Nome: Fulano 123
+Fone: 92384739
+--------------------
+Nome: Fulano 924
+Fone: 92384222
+--------------------
+Nome: Fulano 837
+Fone: 33384222
+--------------------
+
+1) Criar Lista
+2) Criar Vetor
+3) Algoritmo a ser estudado
+4) Método logarítmico
+5) Sair
+
+Note que o menu principal foi exibido depois da impressão da lista.
+
+A partir de agora, o usuário deverá escolher uma opção de ordenação (3 - 5). O programa deve fazer uma cópia da lista original e usar esta cópia como argumento para a função de ordenação escolhida. Após, o programa deve imprimir a lista ordenada segundo o algoritmo escolhido e, indicar o tempo decorrido em segundos.
+
+
+
+Exemplo de saída vetor:
+--------------------
+Nome: Fulano 123
+Fone: 92384739
+--------------------
+Nome: Fulano 837
+Fone: 33384222
+--------------------
+Nome: Fulano 924
+Fone: 92384222
+--------------------
+Tempo: 1 segs.
+
+Exemplo de saída lista:
+--------------------
+Nome: Fulano 123
+Fone: 92384739
+--------------------
+Nome: Fulano 837
+Fone: 33384222
+--------------------
+Nome: Fulano 924
+Fone: 92384222
+--------------------
+Tempo: 3 segs.
+
+1) Criar Lista
+2) Criar Vetor
+3) Algoritmo a ser estudado
+4) Método logarítmico
+5) Sair
+
+Note que a ordenação foi realizada com base no campo NOME.
+
+Dicas: 
+Comparar strings com strcmp
+Concatenar nome + número aleatório com strcat
+
+A nota do trabalho obedecerá a seguinte regra de pontuação, para cada tarefa COMPLETA 
+(sem erros) e trabalho que não compilarem recebem nota 0. Erros de identação também será
+descontado.
+
+0.5 ponto: Implementação do menu principal.
+1.5 ponto: Relatório
+1.0 ponto: Criar lista com dados aleatórios e com tamanho indicado pelo usuário.
+0.5 ponto: Criar vetor com dados aleatórios.
+0.5 ponto: função para impressão da lista na tela.
+1.0 ponto: Apresentação em sala do Algoritmo estudado.
+5.0 ponto: funções de ordenação.
